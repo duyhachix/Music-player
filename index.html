@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Xbotifi</title>
+
+		<script
+			src="https://kit.fontawesome.com/a076d05399.js"
+			crossorigin="anonymous"
+		></script>
+		<link
+			rel="shortcut icon"
+			href="https://e1.pngegg.com/pngimages/893/800/png-clipart-spotify-for-os-x-el-capitan-spotify-icon.png"
+			type="image/x-icon"
+		/>
+		<link rel="stylesheet" href="style.css" />
+		<!-- <link rel="icon" type="image/png" href="/assets/img/pngegg.png" /> -->
+		<script
+			src="https://kit.fontawesome.com/9fd1a1061e.js"
+			crossorigin="anonymous"
+		></script>
+	</head>
+	<body>
+		<div class="player">
+			<!-- Dashboard -->
+			<div class="dashboard">
+				<!-- header -->
+				<header>
+					<h4>Spotifi</h4>
+					<h5>Tên bài hát sẽ xuất hiện ở đây</h5>
+				</header>
+
+				<!-- CD -->
+				<div class="cd">
+					<div
+						class="cd-thumb"
+						style="
+							background-image: url('https://vi.pngtree.com/freepng/cd-png-element_5512764.html');
+						"
+					></div>
+				</div>
+
+				<!-- Control -->
+				<div class="control">
+					<div class="btn btn-repeat">
+						<i class="fas fa-redo"></i>
+					</div>
+					<div class="btn btn-prev">
+						<i class="fas fa-step-backward"></i>
+					</div>
+					<div class="btn btn-toggle-play">
+						<i class="fas fa-pause icon-pause"></i>
+						<i class="fas fa-play icon-play"></i>
+					</div>
+					<div class="btn btn-next">
+						<i class="fas fa-step-forward"></i>
+					</div>
+					<div class="btn btn-random">
+						<i class="fas fa-random"></i>
+					</div>
+				</div>
+
+				<input
+					id="progress"
+					class="progress"
+					type="range"
+					value="0"
+					step="1"
+					min="0"
+					max="100"
+				/>
+
+				<audio id="audio" src=""></audio>
+			</div>
+
+			<!-- Playlist -->
+			<div class="playlist"></div>
+		</div>
+		<script src="main.js"></script>
+	</body>
+</html>
