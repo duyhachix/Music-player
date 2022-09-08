@@ -3,7 +3,7 @@
  * 1. render songs -> ok
  * 2. scroll top -> ok
  * 3. Play / pause / seek (progress) -> ok
- * 4. CD rotate
+ * 4. CD rotate -> ok
  * 5. Previos / next
  * 6. Random
  * 7. Next / repeat when ended
