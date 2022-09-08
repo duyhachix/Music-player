@@ -1,8 +1,8 @@
 // Function Step by step
 /**
- * 1. render songs
- * 2. scroll top
- * 3. Play / pause / seek
+ * 1. render songs -> ok
+ * 2. scroll top -> ok
+ * 3. Play / pause / seek (progress) -> ok
  * 4. CD rotate
  * 5. Previos / next
  * 6. Random
@@ -18,6 +18,7 @@ let playlist = $('.playlist');
 console.log('danh sách playlits', playlist);
 
 let cd = $('.cd');
+
 let player = $('.player');
 let heading = $('header h4');
 let cdThumb = $('.cd-thumb');
@@ -25,9 +26,13 @@ let audio = $('#audio');
 
 let playBtn = $('.btn-toggle-play');
 
+let progress = $('#progress');
+//console.log('xin chao day la progres', progress.value);
+
 // songs list
 const app = {
 	currentIndex: 0,
+	isPlaying: false,
 	songs: [
 		{
 			name: 'Out of time',
@@ -97,8 +102,7 @@ const app = {
 
 			// xử lí Zoom in/  zoomout cd
 			document.onscroll = function () {
-				let scrollTop =
-					window.scrollY || document.documentElement.scrollTop;
+				let scrollTop = window.scrollY || document.documentElement.scrollTop;
 				// console.log(window.scrollY);
 				console.log('croll top: ', scrollTop);
 				let newCdWidth = cdWidth - scrollTop;
@@ -107,16 +111,66 @@ const app = {
 				cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0;
 				cd.style.opacity = newCdWidth / cdWidth;
 			};
-
-			// xử lí Click play
-			playBtn.onclick = function () {
-				audio.play();
-				player.classList.add('playing');
-			};
 		};
+		// 3. play / pause / progress
+
+		// xử lí Click play
+		playBtn.onclick = function () {
+			if (!this.isPlaying) {
+				audio.play();
+				//player.classList.add('playing');
+			} else {
+				audio.pause();
+				//player.classList.remove('playing');
+			}
+			this.isPlaying = !this.isPlaying;
+		};
+
+		// khi song played
+		audio.onplay = function () {
+			player.classList.add('playing');
+			cdThumbAnimate.play();
+		};
+
+		//khi song paused
+		audio.onpause = function () {
+			player.classList.remove('playing');
+			cdThumbAnimate.pause();
+		};
+
+		// progressing
+		audio.ontimeupdate = function () {
+			if (audio.duration) {
+				let progressPercent = Math.floor(
+					(audio.currentTime / audio.duration) * 100
+				);
+				progress.value = progressPercent;
+			}
+		};
+
+		// Xử lý khi tua
+		progress.onchange = function (e) {
+			let seekTime = (audio.duration / 100) * e.target.value;
+			audio.currentTime = seekTime;
+		};
+
+		// 4. CD rotate
+		let cdThumbAnimate = cdThumb.animate(
+			[
+				{
+					transform: 'rotate(360deg)',
+				},
+			],
+			{
+				duration: 10000,
+				iteration: Infinity,
+			}
+		);
+		cdThumbAnimate.pause();
+		console.log('This is: ', cdThumbAnimate);
 	},
 
-	// Play, pause
+	// 3. Play, pause
 	defineProperties: function () {
 		// cần đọc đọc phần Object.defineProperty
 		Object.defineProperty(this, 'currentSong', {
