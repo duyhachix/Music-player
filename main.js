@@ -27,6 +27,9 @@ let audio = $('#audio');
 let playBtn = $('.btn-toggle-play');
 
 let progress = $('#progress');
+
+let nextBtn = $('.btn-next');
+let prevBtn = $('.btn-prev');
 //console.log('xin chao day la progres', progress.value);
 
 // songs list
@@ -34,6 +37,12 @@ const app = {
 	currentIndex: 0,
 	isPlaying: false,
 	songs: [
+		{
+			name: 'Dynasty',
+			singer: 'Miia',
+			path: './assets/Music/Dynasty-Miia-3843630.mp3',
+			image: './assets/img/81aeHYZqUQL._SS500_.jpg',
+		},
 		{
 			name: 'Out of time',
 			singer: 'The Weekend',
@@ -71,6 +80,19 @@ const app = {
 			path: './assets/Music/DuskTillDawn-ZaynSia-5164057.mp3',
 			image: './assets/img/dusktilldawn.jpg',
 		},
+		{
+			name: 'Treat you better',
+			singer: 'Shawn Mendes',
+			path: './assets/Music/TreatYouBetter-ShawnMendes-5319396 (1).mp3',
+			image: './assets/img/22819d79-2823-4eae-b416-aff478e55bfe_1024.jpg',
+		},
+		{
+			name: 'Attention',
+			singer: 'Zayn',
+			path: './assets/Music/Attention-CharliePuth-6429177.mp3',
+			image:
+				'./assets/img/Charlie_Puth_-_Attention_(Official_Single_Cover).png',
+		},
 	],
 
 	// 1.render list songs
@@ -96,6 +118,7 @@ const app = {
 
 	// 2. scroll top
 	handleEvents: function () {
+		const _this = this;
 		document.onscroll = function () {
 			// let cd = $('.cd');
 			let cdWidth = cd.offsetWidth;
@@ -116,14 +139,14 @@ const app = {
 
 		// xử lí Click play
 		playBtn.onclick = function () {
-			if (!this.isPlaying) {
+			if (!_this.isPlaying) {
 				audio.play();
 				//player.classList.add('playing');
 			} else {
 				audio.pause();
 				//player.classList.remove('playing');
 			}
-			this.isPlaying = !this.isPlaying;
+			_this.isPlaying = !_this.isPlaying;
 		};
 
 		// khi song played
@@ -167,7 +190,18 @@ const app = {
 			}
 		);
 		cdThumbAnimate.pause();
-		console.log('This is: ', cdThumbAnimate);
+
+		// khi nexxt song
+		nextBtn.onclick = function () {
+			_this.nextSong();
+			audio.play();
+		};
+
+		// khi prev song
+		prevBtn.onclick = function () {
+			_this.prevSong();
+			audio.play();
+		};
 	},
 
 	// 3. Play, pause
@@ -180,14 +214,29 @@ const app = {
 		});
 	},
 
-	loadCurrentSong() {
+	loadCurrentSong: function () {
 		// get element cần thiết để làm việc với các element này
-
 		heading.textContent = this.currentSong.name;
 		cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`;
 		audio.src = this.currentSong.path;
 
 		// console.log(heading, cdThumb, audio);
+	},
+
+	// 5.next song / prev song
+	nextSong: function () {
+		this.currentIndex++;
+		if (this.currentIndex >= this.songs.length) {
+			this.currentIndex = 0;
+		}
+		this.loadCurrentSong();
+	},
+	prevSong: function () {
+		this.currentIndex--;
+		if (this.currentIndex < 0) {
+			this.currentIndex = this.songs.length - 1;
+		}
+		this.loadCurrentSong();
 	},
 
 	start: function () {
