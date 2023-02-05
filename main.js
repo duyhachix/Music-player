@@ -12,22 +12,19 @@
  * 10. play song when click
  */
 
+// khai báo biến
+	// bind 
 let $ = document.querySelector.bind(document);
 let $$ = document.querySelectorAll.bind(document);
+	// khai báo
 let playlist = $('.playlist');
-console.log('danh sách playlits', playlist);
-
 let cd = $('.cd');
-
 let player = $('.player');
 let heading = $('header h4');
 let cdThumb = $('.cd-thumb');
 let audio = $('#audio');
-
 let playBtn = $('.btn-toggle-play');
-
 let progress = $('#progress');
-//console.log('xin chao day la progres', progress.value);
 
 // songs list
 const app = {
@@ -182,12 +179,9 @@ const app = {
 
 	loadCurrentSong() {
 		// get element cần thiết để làm việc với các element này
-
 		heading.textContent = this.currentSong.name;
 		cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`;
 		audio.src = this.currentSong.path;
-
-		// console.log(heading, cdThumb, audio);
 	},
 
 	start: function () {
@@ -205,4 +199,5 @@ const app = {
 	},
 };
 
+// run app when start
 app.start();
