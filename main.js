@@ -1,6 +1,6 @@
 // Function Step by step
 /**
- * 1. render songs -> ok
+ * 1. render songsList -> ok
  * 2. scroll top -> ok
  * 3. Play / pause / seek (progress) -> ok
  * 4. CD rotate -> ok
@@ -13,10 +13,10 @@
  */
 
 // khai báo biến
-	// bind 
+// bind
 let $ = document.querySelector.bind(document);
 let $$ = document.querySelectorAll.bind(document);
-	// khai báo
+// khai báo
 let playlist = $('.playlist');
 let cd = $('.cd');
 let player = $('.player');
@@ -25,12 +25,40 @@ let cdThumb = $('.cd-thumb');
 let audio = $('#audio');
 let playBtn = $('.btn-toggle-play');
 let progress = $('#progress');
+let prevBtn = $('.btn-prev');
+let nextBtn = $('.btn-next');
+let randomBtn = $('.btn-random');
 
-// songs list
+// songsList list
 const app = {
 	currentIndex: 0,
 	isPlaying: false,
-	songs: [
+	isShuffling: false,
+	songsList: [
+		{
+			name: 'Flower',
+			singer: 'Miley Cyrus',
+			path: './assets/Music/Flowers - Miley Cyrus.mp3',
+			image: './assets/img/1673583001776_640.jpg',
+		},
+		{
+			name: 'Co don tren Sofa',
+			singer: 'Ho Ngoc Ha',
+			path: './assets/Music/Co Don Tren Sofa - Ho Ngoc Ha - NhacHay360.mp3',
+			image: './assets/img/1666185034236_300.jpg',
+		},
+		{
+			name: 'Di vang nhat nhoa',
+			singer: 'Ha Nhi',
+			path: './assets/Music/Di Vang Nhat Nhoa - Ha Nhi - NhacHay360.mp3',
+			image: './assets/img/1542009008716_300.jpg',
+		},
+		{
+			name: 'Chuyen doi ta',
+			singer: 'EmceeL ft Muoi',
+			path: './assets/Music//Chuyen Doi Ta - Emcee L (Da LAB), Muoii - NhacHay360.mp3',
+			image: './assets/img/1637809824703_300.jpg',
+		},
 		{
 			name: 'Out of time',
 			singer: 'The Weekend',
@@ -70,67 +98,98 @@ const app = {
 		},
 	],
 
-	// 1.render list songs
+	// start app
+	start: function () {
+		// định nghĩa các thuộc tính
+		this.defineProperties();
+
+		// lắng nghe, xử lí các event tuong tac (DOM events)
+		this.handleEvents();
+
+		// load thông tin bài hát đầu tiên vào UI khi chạy app
+		this.loadCurrentSong();
+
+		// render playlist
+		this.render();
+	},
+
+	// render list songsList
 	render: function () {
-		console.log(123);
-		let html = this.songs.map((song) => {
+		let html = this.songsList.map((song) => {
 			return `
-      <div class="song">
-					<div class="thumb">
-						<img src="${song.image}" alt="" />
-					</div>
-					<div class="body">
-						<h3 class="title">${song.name}</h3>
-						<p class="author">${song.singer}</p>
-					</div>
-					<div class="option">
-						<i class="fa-solid fa-circle-chevron-down"></i>
-					</div>
-				</div>`;
+				<div class="song">
+						<div class="thumb">
+							<img src="${song.image}" alt="" />
+						</div>
+						<div class="body">
+							<h3 class="title">${song.name}</h3>
+							<p class="author">${song.singer}</p>
+						</div>
+						<div class="option">
+							<i class="fa-solid fa-circle-chevron-down"></i>
+						</div>
+					</div>`;
 		});
 		$('.playlist').innerHTML = html.join('');
 	},
 
-	// 2. scroll top
+	// Play, pause
+	defineProperties: function () {
+		// cần đọc đọc phần Object.defineProperty
+		Object.defineProperty(this, 'currentSong', {
+			get: function () {
+				return this.songsList[this.currentIndex];
+			},
+		});
+	},
+
+	/**
+	 * loading current song
+	 */
+	loadCurrentSong() {
+		// get element cần thiết để làm việc với các element này
+		heading.textContent = this.currentSong.name;
+		cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`;
+		audio.src = this.currentSong.path;
+	},
+
+	/**
+	 * handling all events function
+	 */
 	handleEvents: function () {
+		let _this = this;
+
+		// scroll to zoom in/out CD image
+		let cdWidth = cd.offsetWidth;
 		document.onscroll = function () {
-			// let cd = $('.cd');
-			let cdWidth = cd.offsetWidth;
+			let scrollTopPosition =
+				window.scrollY || document.documentElement.scrollTop;
 
-			// xử lí Zoom in/  zoomout cd
-			document.onscroll = function () {
-				let scrollTop = window.scrollY || document.documentElement.scrollTop;
-				// console.log(window.scrollY);
-				console.log('croll top: ', scrollTop);
-				let newCdWidth = cdWidth - scrollTop;
-				// console.log(newCdWidth);
-				console.log('new cd width: ', newCdWidth);
-				cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0;
-				cd.style.opacity = newCdWidth / cdWidth;
-			};
+			let newCdWidth = cdWidth - scrollTopPosition;
+
+			cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0;
+			cd.style.opacity = newCdWidth / cdWidth;
 		};
-		// 3. play / pause / progress
 
-		// xử lí Click play
+		// xử lí Click play/pause
 		playBtn.onclick = function () {
-			if (!this.isPlaying) {
-				audio.play();
-				//player.classList.add('playing');
-			} else {
+			if (_this.isPlaying) {
 				audio.pause();
-				//player.classList.remove('playing');
+			} else {
+				audio.play();
 			}
-			this.isPlaying = !this.isPlaying;
 		};
 
 		// khi song played
 		audio.onplay = function () {
+			_this.isPlaying = true;
 			player.classList.add('playing');
 			cdThumbAnimate.play();
 		};
 
 		//khi song paused
 		audio.onpause = function () {
+			_this.isPlaying = false;
 			player.classList.remove('playing');
 			cdThumbAnimate.pause();
 		};
@@ -145,7 +204,7 @@ const app = {
 			}
 		};
 
-		// Xử lý khi tua
+		// Xử lý khi tua song o progress bar
 		progress.onchange = function (e) {
 			let seekTime = (audio.duration / 100) * e.target.value;
 			audio.currentTime = seekTime;
@@ -165,37 +224,69 @@ const app = {
 		);
 		cdThumbAnimate.pause();
 		console.log('This is: ', cdThumbAnimate);
+
+		// prev song button click handler
+		prevBtn.onclick = function () {
+			if (_this.isShuffling) {
+				_this.randomSong();
+			} else {
+				_this.prevSong();
+			}
+			audio.play();
+		};
+
+		// next song button clicking handler
+		nextBtn.onclick = function () {
+			if (_this.isShuffling) {
+				_this.randomSong();
+			} else {
+				_this.nextSong();
+			}
+			audio.play();
+		};
+
+		randomBtn.onclick = function (e) {
+			_this.isShuffling = !_this.isShuffling;
+			randomBtn.classList.toggle('active', _this.isShuffling);
+		};
+
+		audio.onended = function () {
+			console.log(12313212312);
+			if (_this.isShuffling) {
+				_this.randomSong();
+			}
+			_this.nextSong();
+			audio.play();
+		};
 	},
 
-	// 3. Play, pause
-	defineProperties: function () {
-		// cần đọc đọc phần Object.defineProperty
-		Object.defineProperty(this, 'currentSong', {
-			get: function () {
-				return this.songs[this.currentIndex];
-			},
-		});
-	},
-
-	loadCurrentSong() {
-		// get element cần thiết để làm việc với các element này
-		heading.textContent = this.currentSong.name;
-		cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`;
-		audio.src = this.currentSong.path;
-	},
-
-	start: function () {
-		// định nghĩa các thuộc tính
-		this.defineProperties();
-
-		// load thông tin bài hát đầu tiên vào UI khi chạy app
+	// prev song function
+	prevSong() {
+		this.currentIndex--;
+		if (this.currentIndex < 0) {
+			this.currentIndex = this.songsList.length - 1;
+		}
 		this.loadCurrentSong();
+	},
 
-		// lắng nghe, xử lí các event (DOM events)
-		this.handleEvents();
+	// next song function
+	nextSong() {
+		this.currentIndex++;
+		if (this.currentIndex >= this.songsList.length) {
+			this.currentIndex = 0;
+		}
+		this.loadCurrentSong();
+	},
 
-		// render playlist
-		this.render();
+	// random btn handler function
+	randomSong() {
+		let newIndex;
+		do {
+			newIndex = Math.floor(Math.random() * this.songsList.length);
+		} while (newIndex === this.currentIndex);
+
+		this.currentIndex = newIndex;
+		this.loadCurrentSong();
 	},
 };
 

@@ -191,3 +191,6 @@ header h2 {
 	color: #999;
 	font-size: 18px;
 }
+.fas:hover {
+	cursor: pointer;
+}
