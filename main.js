@@ -28,12 +28,14 @@ let progress = $('#progress');
 let prevBtn = $('.btn-prev');
 let nextBtn = $('.btn-next');
 let randomBtn = $('.btn-random');
+let repeatBtn = $('.btn-repeat');
 
 // songsList list
 const app = {
 	currentIndex: 0,
 	isPlaying: false,
 	isShuffling: false,
+	isRepeat: false,
 	songsList: [
 		{
 			name: 'Flower',
@@ -250,13 +252,15 @@ const app = {
 			randomBtn.classList.toggle('active', _this.isShuffling);
 		};
 
+		repeatBtn.onclick = function () {
+			_this.isRepeat = !_this.isRepeat;
+			repeatBtn.classList.toggle('active', _this.isRepeat);
+		};
+
 		audio.onended = function () {
-			console.log(12313212312);
-			if (_this.isShuffling) {
-				_this.randomSong();
-			}
-			_this.nextSong();
-			audio.play();
+			if (_this.isRepeat) {
+				audio.play();
+			} else nextBtn.click();
 		};
 	},
 
