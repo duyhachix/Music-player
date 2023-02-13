@@ -115,9 +115,9 @@ const app = {
 
 	// render list songsList
 	render: function () {
-		let html = this.songsList.map((song) => {
+		let html = this.songsList.map((song, index) => {
 			return `
-				<div class="song">
+				<div class="song ${index === this.currentIndex ? 'active' : ''}">
 						<div class="thumb">
 							<img src="${song.image}" alt="" />
 						</div>
@@ -233,6 +233,7 @@ const app = {
 				_this.prevSong();
 			}
 			audio.play();
+			_this.render();
 		};
 
 		// next song button clicking handler
@@ -243,6 +244,7 @@ const app = {
 				_this.nextSong();
 			}
 			audio.play();
+			_this.render();
 		};
 
 		randomBtn.onclick = function (e) {
