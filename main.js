@@ -236,6 +236,7 @@ const app = {
 			}
 			audio.play();
 			_this.render();
+			_this.scrollToActiveSong();
 		};
 
 		// next song button clicking handler
@@ -247,6 +248,7 @@ const app = {
 			}
 			audio.play();
 			_this.render();
+			_this.scrollToActiveSong();
 		};
 
 		randomBtn.onclick = function (e) {
@@ -293,6 +295,16 @@ const app = {
 
 		this.currentIndex = newIndex;
 		this.loadCurrentSong();
+	},
+
+	scrollToActiveSong() {
+		setTimeout(() => {
+			$('.song.active').scrollIntoView({
+				behavior: 'smooth',
+				block: 'nearest',
+				inline: 'center',
+			});
+		}, 500);
 	},
 };
 
