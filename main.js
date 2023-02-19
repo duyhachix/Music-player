@@ -30,12 +30,20 @@ let nextBtn = $('.btn-next');
 let randomBtn = $('.btn-random');
 let repeatBtn = $('.btn-repeat');
 
+let PLAYER_STORE_KEY = 'F8_PLAYER_MUSIC_PLAYER';
+
 // songsList list
 const app = {
 	currentIndex: 0,
 	isPlaying: false,
 	isShuffling: false,
 	isRepeat: false,
+	config: JSON.parse(localStorage.getItem(PLAYER_STORE_KEY)) || {},
+	setConfig: function (key, value) {
+		this.config[key] = value;
+		localStorage.setItem(PLAYER_STORE_KEY, JSON.stringify(this.config));
+	},
+
 	songsList: [
 		{
 			name: 'Flower',
@@ -102,6 +110,9 @@ const app = {
 
 	// start app
 	start: function () {
+		// load config khi bat dau run app
+		this.loadConfig();
+
 		// định nghĩa các thuộc tính
 		this.defineProperties();
 
@@ -113,6 +124,10 @@ const app = {
 
 		// render playlist
 		this.render();
+
+		// hien thi trang thai ban dau cua button repeat va random
+		randomBtn.classList.toggle('active', _this.isShuffling);
+		repeatBtn.classList.toggle('active', _this.isRepeat);
 	},
 
 	// render list songsList
@@ -145,6 +160,12 @@ const app = {
 				return this.songsList[this.currentIndex];
 			},
 		});
+	},
+
+	// load config
+	loadConfig: function () {
+		this.isShuffling = this.config.isShuffling;
+		this.isRepeat = this.config.isRepeat;
 	},
 
 	/**
@@ -254,11 +275,13 @@ const app = {
 		};
 
 		randomBtn.onclick = function (e) {
+			_this.setConfig('isShuffling', _this.isShuffling);
 			_this.isShuffling = !_this.isShuffling;
 			randomBtn.classList.toggle('active', _this.isShuffling);
 		};
 
 		repeatBtn.onclick = function () {
+			_this.setConfig('isRepeat', _this.isRepeat);
 			_this.isRepeat = !_this.isRepeat;
 			repeatBtn.classList.toggle('active', _this.isRepeat);
 		};
