@@ -132,7 +132,7 @@ const app = {
 						</div>
 					</div>`;
 		});
-		$('.playlist').innerHTML = html.join('');
+		playlist.innerHTML = html.join('');
 	},
 
 	// Play, pause
@@ -266,6 +266,11 @@ const app = {
 				audio.play();
 			} else nextBtn.click();
 		};
+
+		// lang nghe hanh vi click vao playlist class
+		playlist.onclick = function (e) {
+			console.log(e.target);
+		}
 	},
 
 	// prev song function
