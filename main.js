@@ -119,7 +119,9 @@ const app = {
 	render: function () {
 		let html = this.songsList.map((song, index) => {
 			return `
-				<div class="song ${index === this.currentIndex ? 'active' : ''}">
+				<div  class="song ${
+					index === this.currentIndex ? 'active' : ''
+				}" data-index=${index}>
 						<div class="thumb">
 							<img src="${song.image}" alt="" />
 						</div>
@@ -269,8 +271,24 @@ const app = {
 
 		// lang nghe hanh vi click vao playlist class
 		playlist.onclick = function (e) {
-			console.log(e.target);
-		}
+			let songNode = e.target.closest('.song:not(.active)');
+			// xu li khi click vao song
+			if (songNode || e.target.closest('.option')) {
+				// khi clcik vao bai hat
+				if (songNode) {
+					console.log(songNode.dataset.index);
+					_this.currentIndex = +songNode.dataset.index;
+					// vi khi dung dataset thi index la string, phai bien ve Number; Có thể dùng Number()
+					_this.loadCurrentSong();
+					_this.render();
+					audio.play();
+				}
+
+				// khi click vao option
+				if (e.target.closest('.option')) {
+				}
+			}
+		};
 	},
 
 	// prev song function
